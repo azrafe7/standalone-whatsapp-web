@@ -1,0 +1,27 @@
+{
+  "name": "Standalone WhatsApp Web",
+  "version": "0.1.0",
+  "description": "Open Standalone WhatsApp Web",
+  "manifest_version": 3,
+  "permissions": [],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "128": "assets/icon128.png"
+  },
+  "action": {
+    "default_icon": {
+
+      "128": "assets/icon128.png"
+    },
+    "default_title": "Standalone WhatsApp Web"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+W"
+      }
+    }
+  }
+}
