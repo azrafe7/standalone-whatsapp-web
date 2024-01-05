@@ -10,7 +10,6 @@ let size = {
   height: 600,
 };
 
-// enable picker when clicking the browser action
 chrome.action.onClicked.addListener(async (tab) => {
   console.log("[StandaloneWA:BG] clicked");
   
