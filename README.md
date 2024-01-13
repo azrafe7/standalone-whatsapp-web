@@ -8,6 +8,8 @@ WhatsApp Web will open in a clean window (i.e. without forward/back buttons or b
 so you can read and write your messages distraction-free, 
 and always have them available in a separate window, away from your browsing tabs.
 
+If you already have WhatsApp Web open, it will move that tab to the popup.
+
 Right-click the extension icon and select "Re-attach as tab..." from the context menu to reattach WhatsApp Web as a tab in your currently open window.
 
 

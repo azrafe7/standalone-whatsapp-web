@@ -57,8 +57,7 @@ chrome.action.onClicked.addListener(async (tab) => {
   let currWindow = await chrome.windows.getCurrent();
   
   if (!createdPopupWin) { // create new popup
-    // if a tab with `url` is already open in current window, remove it before opening the popup
-    // (would have been better to move it instead of closing it, but it can't be moved to a window with type 'popup')
+    // if a tab with `url` is already open in current window, move it to the popup
     chrome.tabs.query({ windowId:currWindow.id} , (tabs) => {
       // console.log("tabs", tabs.map((tab) => tab.url));
       let candidateTabs = tabs.filter((tab) => { 
@@ -67,10 +66,10 @@ chrome.action.onClicked.addListener(async (tab) => {
       console.log("candidateTabs", candidateTabs);
       if (candidateTabs.length > 0) {
         const tabToRemove = candidateTabs[0];
-        chrome.tabs.remove(tabToRemove.id, () => {
-          console.log("removed tab", tabToRemove.id);          
-          openPopupWindow(options);
-        });
+        delete options.url;
+        options.tabId = tabToRemove.id;
+        console.log("moved tab", tabToRemove.id);
+        openPopupWindow(options);
       } else {
         openPopupWindow(options);
       }
