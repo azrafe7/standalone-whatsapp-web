@@ -15,3 +15,7 @@ Right-click the extension icon and select "Re-attach as tab..." from the context
 
 DISCLAIMER: I'm not in any way affiliated with WhatsApp, just a happy user of it.
 WhatsApp is a registered trademark owned by Meta.
+
+
+Code: https://github.com/azrafe7/standalone-whatsapp-web
+Please file bugs/feature requests at https://github.com/azrafe7/standalone-whatsapp-web/issues
