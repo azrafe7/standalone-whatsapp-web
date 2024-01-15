@@ -3,10 +3,20 @@
   "version": "0.1.4",
   "description": "Open WhatsApp Web in a standalone popup window",
   "manifest_version": 3,
-  "permissions": ["contextMenus", "tabs"],
+  "permissions": ["contextMenus", "tabs", "scripting"],
   "background": {
     "service_worker": "background.js"
   },
+  "content_scripts": [
+    {
+      "matches": ["https://web.whatsapp.com/"],
+      "js": ["contentScript.js"],
+      "all_frames": false
+    }
+  ],  
+  "host_permissions": [
+    "https://web.whatsapp.com/"
+  ],
   "icons": {
     "128": "assets/icon128.png"
   },
