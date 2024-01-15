@@ -17,6 +17,22 @@ let offset = {
 };
 
 let createdPopupWin = null;
+async function checkCreatedPopupWin() {
+  if (createdPopupWin) return createdPopupWin;
+  
+  createdPopupWin = null;
+  let candidateTabs = await getCandidateTabs();
+  let windowsById = {};
+  for (const tab of candidateTabs) {
+    let win = windowsById[tab.windowId] ?? await chrome.windows.get(tab.windowId);
+    if (win.type === 'popup' && win.tabs.length == 0) {
+      createdPopupWin = win;
+      break;
+    }
+  }
+  
+  return createdPopupWin;
+}
 
 // add/remove contextMenu entry to action button
 const reattachContextId = "StandaloneWA_onReattachContextMenu";
@@ -87,6 +103,7 @@ chrome.action.onClicked.addListener(async (tab) => {
 
   let currWindow = await chrome.windows.getCurrent();
 
+  await checkCreatedPopupWin();
   if (!createdPopupWin) { // create new popup
     // if a tab with `url` is already open in current window, move it to the popup
     let candidateTabs = await getCandidateTabs();
@@ -109,8 +126,9 @@ chrome.action.onClicked.addListener(async (tab) => {
   updateContextMenu({enable:true});
 });
 
-chrome.windows.onRemoved.addListener((winId) => {
+chrome.windows.onRemoved.addListener(async (winId) => {
   console.log("removed win", winId);
+  await checkCreatedPopupWin();
   if (createdPopupWin && winId == createdPopupWin.id) {
     createdPopupWin = null;
     updateContextMenu({enable:false});
@@ -126,6 +144,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     let currWindow = await chrome.windows.getCurrent();
     let [activeTab] = await chrome.tabs.query({active: true});
     const activeTabIndex = activeTab?.index ?? -2;
+    await checkCreatedPopupWin();
     chrome.tabs.move(createdPopupWin.tabs[0].id, { windowId:currWindow.id, index:activeTabIndex + 1 }, (tab) => {
       chrome.tabs.update(tab.id, { active:true });
       createdPopupWin = null;
