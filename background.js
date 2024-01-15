@@ -50,8 +50,6 @@ function openPopupWindow(options) {
 }
 
 async function getCandidateTabs(windowId) {
-  let currWindow = await chrome.windows.getCurrent();
-  if (!windowId) windowId = currWindow.id;
   let tabs = await chrome.tabs.query({ windowId:windowId });
 
   // console.log("tabs", tabs.map((tab) => tab.url));
@@ -63,6 +61,7 @@ async function getCandidateTabs(windowId) {
 }
 
 chrome.runtime.onInstalled.addListener(async () => {
+  console.log("onInstalled");
   let candidateTabs = await getCandidateTabs();
   console.log("candidateTabs", candidateTabs);
   for (const tab of candidateTabs) {
