@@ -95,10 +95,12 @@
     if (newUnreadMessages != unreadMessages) {
       unreadMessages = newUnreadMessages;
       debug.log("[StandaloneWA:CTX] send new unread messages", unreadMessages);
-      await chrome.runtime.sendMessage({
-        event: "setUnreadMessages",
-        data: unreadMessages,
-      });
+      if (chrome.runtime?.id) {
+        chrome.runtime.sendMessage({
+          event: "setUnreadMessages",
+          data: unreadMessages,
+        });
+      }
     }
   }
 
@@ -108,17 +110,15 @@
   chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     debug.log("[StandaloneWA:CTX]", msg);
     const { event, data } = msg;
-
-    if (event === "poll") {
-    }
-
   });
 
   // reset badge and title when browsing away from page
   window.addEventListener('beforeunload', () => {
-    chrome.runtime.sendMessage({
-      event: "setUnreadMessages",
-      data: 0,
-    });
+    if (chrome.runtime?.id) {
+      chrome.runtime.sendMessage({
+        event: "setUnreadMessages",
+        data: 0,
+      });
+    }
   });
 })();
