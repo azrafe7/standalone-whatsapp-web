@@ -1,6 +1,6 @@
 {
   "name": "Standalone WhatsApp Web",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Open WhatsApp Web in a standalone popup window",
   "manifest_version": 3,
   "permissions": ["contextMenus", "tabs", "scripting"],
