@@ -10,9 +10,10 @@
   let manifest = chrome.runtime.getManifest();
   console.log(manifest.name + " v" + manifest.version);
 
+  let unreadMessages = 0;
 
   /**
-   * elementsReady() reworked from jwilson8767 elementReady() code
+   * elementsChanged() reworked from jwilson8767 elementReady() code
    *
    * MIT Licensed
    * Authors: jwilson8767, azrafe7
@@ -71,15 +72,6 @@
     return mutObserver;
   }
 
-  function setBadge(text) {
-    chrome.runtime.sendMessage({
-      event: "setBadge",
-      data: text,
-    });
-  }
-
-
-  let unreadMessages = 0;
   const callback = async (elements, selector, index, matchedSelectors) => {
     debug.log("[StandaloneWA:CTX]", 'callback called');
 
