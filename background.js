@@ -11,6 +11,11 @@ let size = {
   height: 600,
 };
 
+let offset = {
+  top: 20,
+  left: 20,
+};
+
 let createdPopupWin = null;
 
 // add/remove contextMenu entry to action button
@@ -77,6 +82,8 @@ chrome.action.onClicked.addListener(async (tab) => {
     type: 'popup',
     width: size.width,
     height: size.height,
+    top: offset.top,
+    left: offset.left,
   };
 
   let currWindow = await chrome.windows.getCurrent();
