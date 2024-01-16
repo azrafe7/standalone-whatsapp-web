@@ -2,7 +2,7 @@
 
 (async () => {
 
-  const DEBUG = false;
+  const DEBUG = true;
   let debug = {
     log: DEBUG ? console.log.bind(console) : () => {} // log or NO_OP
   }
@@ -85,14 +85,22 @@
     debug.log("[StandaloneWA:CTX] unread messages", unreadMessages);
 
     if (newUnreadMessages != unreadMessages) {
-      unreadMessages = newUnreadMessages;
-      debug.log("[StandaloneWA:CTX] send new unread messages", unreadMessages);
+      debug.log("[StandaloneWA:CTX] send new unread messages", newUnreadMessages);
       if (chrome.runtime?.id) {
         chrome.runtime.sendMessage({
           event: "setUnreadMessages",
-          data: unreadMessages,
+          data: newUnreadMessages,
         });
+        const drawAttention = newUnreadMessages > unreadMessages;
+        debug.log("[StandaloneWA:CTX] drawAttention", drawAttention, newUnreadMessages, unreadMessages);
+        if (drawAttention) {
+          chrome.runtime.sendMessage({
+            event: "setDrawAttention",
+            data: drawAttention,
+          });
+        }
       }
+      unreadMessages = newUnreadMessages;
     }
   }
 

@@ -25,6 +25,7 @@ async function checkCreatedPopupWin() {
   let windowsById = {};
   for (const tab of candidateTabs) {
     let win = windowsById[tab.windowId] ?? await chrome.windows.get(tab.windowId, { populate:true });
+    windowsById[tab.windowId] = win;
     if (win.type === 'popup' && win.tabs.length == 0) {
       createdPopupWin = win;
       break;
@@ -178,11 +179,12 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
   console.log('msg', msg, 'sender', sender, sendResponse);
   console.log('tabId', sender.tab.id);
 
-  if (event === 'setBadge') {
-    const text = data;
-    chrome.action.setBadgeText({
-      text: text
-    });
+  if (event === 'setDrawAttention') {
+    const drawAttention = data;
+    await checkCreatedPopupWin();
+    if (createdPopupWin) {
+      chrome.windows.update(createdPopupWin.id, { drawAttention: drawAttention });
+    }
   } else if (event === 'setUnreadMessages') {
     const unreadMessages = data;
     setUnreadMessages(unreadMessages);
