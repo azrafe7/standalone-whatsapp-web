@@ -20,4 +20,5 @@ WhatsApp is a registered trademark owned by Meta.
 
 
 Code: https://github.com/azrafe7/standalone-whatsapp-web
+
 Please file bugs/feature requests at https://github.com/azrafe7/standalone-whatsapp-web/issues
