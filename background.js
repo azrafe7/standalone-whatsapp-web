@@ -18,19 +18,22 @@ let offset = {
 
 let createdPopupWin = null;
 async function checkCreatedPopupWin() {
-  if (createdPopupWin) return createdPopupWin;
-  
-  createdPopupWin = null;
-  let candidateTabs = await getCandidateTabs();
-  let windowsById = {};
-  for (const tab of candidateTabs) {
-    let win = windowsById[tab.windowId] ?? await chrome.windows.get(tab.windowId, { populate:true });
-    windowsById[tab.windowId] = win;
-    if (win.type === 'popup' && win.tabs.length == 0) {
-      createdPopupWin = win;
-      break;
+  if (!createdPopupWin) {
+    
+    createdPopupWin = null;
+    let candidateTabs = await getCandidateTabs();
+    console.log("candidateTabs", candidateTabs);
+    let windowsById = {};
+    for (const tab of candidateTabs) {
+      let win = windowsById[tab.windowId] ?? await chrome.windows.get(tab.windowId, { populate:true });
+      windowsById[tab.windowId] = win;
+      if (win.type === 'popup' && win.tabs.length == 0) {
+        createdPopupWin = win;
+        break;
+      }
     }
   }
+  console.log('checkCreatedPopupWin', createdPopupWin);
   
   return createdPopupWin;
 }
@@ -67,7 +70,8 @@ function openPopupWindow(options) {
 }
 
 async function getCandidateTabs(windowId) {
-  let tabs = await chrome.tabs.query({ windowId:windowId });
+  const options = windowId ? { windowId:windowId } : {};
+  let tabs = await chrome.tabs.query(options);
 
   // console.log("tabs", tabs.map((tab) => tab.url));
   let candidateTabs = tabs.filter((tab) => {
@@ -102,8 +106,6 @@ chrome.action.onClicked.addListener(async (tab) => {
     left: offset.left,
   };
 
-  let currWindow = await chrome.windows.getCurrent();
-
   await checkCreatedPopupWin();
   if (!createdPopupWin) { // create new popup
     // if a tab with `url` is already open in current window, move it to the popup
@@ -118,8 +120,6 @@ chrome.action.onClicked.addListener(async (tab) => {
     } else {
       openPopupWindow(options);
     }
-
-    console.log('currWindow:', currWindow);
   } else {  // focus existing popup
     chrome.windows.update(createdPopupWin.id, { focused:true });
   }
@@ -182,6 +182,7 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
   if (event === 'setDrawAttention') {
     const drawAttention = data;
     await checkCreatedPopupWin();
+    console.log('drawAttention', drawAttention, 'win', createdPopupWin);
     if (createdPopupWin) {
       chrome.windows.update(createdPopupWin.id, { drawAttention: drawAttention });
     }
