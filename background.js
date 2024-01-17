@@ -27,7 +27,7 @@ async function checkCreatedPopupWin() {
     for (const tab of candidateTabs) {
       let win = windowsById[tab.windowId] ?? await chrome.windows.get(tab.windowId, { populate:true });
       windowsById[tab.windowId] = win;
-      if (win.type === 'popup' && win.tabs.length == 0) {
+      if (win.type === 'popup' && win.tabs.length == 1) {
         createdPopupWin = win;
         break;
       }
