@@ -1,6 +1,8 @@
 # Standalone WhatsApp Web
 Open WhatsApp Web in a standalone popup window.
 
+Chrome Extension on Chrome Web Store: https://chromewebstore.google.com/detail/standalone-whatsapp-web/kjaocoeofalpdjphifnjhnlnikpknglp
+
 # Overview
 Click the extension icon to open WhatsApp Web in a standalone popup window.
 
