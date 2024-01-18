@@ -16,7 +16,10 @@ If you already have WhatsApp Web open, it will move that tab to the popup.
 
 Right-click the extension icon and select "Re-attach as tab..." from the context menu to reattach WhatsApp Web as a tab in your currently open window.
 
-Since v0.2.0 reports unread messages in the extension's icon.
+Features:
+ • Single-instance, detached from other tabs
+ • Reports unread messages in the extension's icon
+ • Draw attention to popup window on new unread messages
 
 
 DISCLAIMER: I'm not in any way affiliated with WhatsApp, just a happy user of it.
