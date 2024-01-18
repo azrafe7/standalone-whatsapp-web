@@ -1,6 +1,8 @@
 # Standalone WhatsApp Web
 Open WhatsApp Web in a standalone popup window.
 
+![Standalone WhatsApp Web](./webstore_assets/screenshot_02.png "Standalone WhatsApp Web")
+
 Chrome Extension on Chrome Web Store: https://chromewebstore.google.com/detail/standalone-whatsapp-web/kjaocoeofalpdjphifnjhnlnikpknglp
 
 # Overview
