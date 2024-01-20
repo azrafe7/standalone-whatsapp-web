@@ -92,8 +92,9 @@
           data: newUnreadMessages,
         });
         const drawAttention = newUnreadMessages > unreadMessages;
-        debug.log("[StandaloneWA:CTX] drawAttention", drawAttention, newUnreadMessages, unreadMessages);
-        if (drawAttention) {
+        const sendDrawAttentionMessage = newUnreadMessages != unreadMessages;
+        debug.log("[StandaloneWA:CTX] drawAttention", drawAttention, newUnreadMessages, unreadMessages, "sendMessage", sendDrawAttentionMessage);
+        if (sendDrawAttentionMessage) {
           chrome.runtime.sendMessage({
             event: "setDrawAttention",
             data: drawAttention,
