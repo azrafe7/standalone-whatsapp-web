@@ -184,7 +184,13 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
     await checkCreatedPopupWin();
     console.log('drawAttention', drawAttention, 'win', createdPopupWin);
     if (createdPopupWin) {
-      chrome.windows.update(createdPopupWin.id, { drawAttention: drawAttention });
+      chrome.windows.update(createdPopupWin.id, { drawAttention: drawAttention },
+      () => {
+        console.log('updated win.drawAttention');
+        if (chrome.runtime.lastError) {
+          console.warn('Whoops...', chrome.runtime.lastError.message);
+        }
+    });
     }
   } else if (event === 'setUnreadMessages') {
     const unreadMessages = data;
