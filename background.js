@@ -52,7 +52,7 @@ function updateContextMenu(options={}) {
       // always add
       chrome.contextMenus.create({
         id: closeWATabsContextId,
-        title: "Close All WhatsApp Tabs...",
+        title: "Close All WhatsApp Web Tabs...",
         contexts: ["action"],
       }, () => {
         // console.log("CM create", closeWATabsContextId);
