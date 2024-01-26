@@ -40,24 +40,40 @@ async function checkCreatedPopupWin() {
 
 // add/remove contextMenu entry to action button
 const reattachContextId = "StandaloneWA_onReattachContextMenu";
+const closeWATabsContextId = "StandaloneWA_onCloseWATabsContextMenu";
 function updateContextMenu(options={}) {
   const defaults = { enable:true };
   options = { ...defaults, ...options };
   chrome.contextMenus.removeAll(function() {
-    // console.log("remove");
+    // console.log("CM removeAll");
     if (chrome.runtime.lastError) {
       console.warn('Whoops...', chrome.runtime.lastError.message);
-    } else if (options.enable) {
+    } else {
+      // always add
       chrome.contextMenus.create({
-        id: reattachContextId,
-        title: "Re-attach as tab...",
+        id: closeWATabsContextId,
+        title: "Close WhatsApp Tabs...",
         contexts: ["action"],
       }, () => {
-        // console.log("create");
+        // console.log("CM create", closeWATabsContextId);
         if (chrome.runtime.lastError) {
           console.warn('Whoops...', chrome.runtime.lastError.message);
         }
       });
+      
+      // only if enable
+      if (options.enable) {
+        chrome.contextMenus.create({
+          id: reattachContextId,
+          title: "Re-attach as tab...",
+          contexts: ["action"],
+        }, () => {
+          // console.log("CM create", reattachContextId);
+          if (chrome.runtime.lastError) {
+            console.warn('Whoops...', chrome.runtime.lastError.message);
+          }
+        });
+      }
     }
   });
 }
@@ -92,7 +108,16 @@ chrome.runtime.onInstalled.addListener(async () => {
     })
     .then(() => console.log("[StandaloneWA:BG] contentScript injected in tab", tab));
   }
+  
+  updateContextMenu({enable:null});
 });
+
+function setLoading() {
+  setTitle({ append: ' (loading)' });
+  chrome.action.setBadgeText({
+    text: '…'
+  });
+}
 
 chrome.action.onClicked.addListener(async (tab) => {
   console.log("[StandaloneWA:BG] clicked");
@@ -108,6 +133,7 @@ chrome.action.onClicked.addListener(async (tab) => {
 
   await checkCreatedPopupWin();
   if (!createdPopupWin) { // create new popup
+    setLoading();
     // if a tab with `url` is already open in current window, move it to the popup
     let candidateTabs = await getCandidateTabs();
     console.log("candidateTabs", candidateTabs);
@@ -150,6 +176,19 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       chrome.tabs.update(tab.id, { active:true });
       createdPopupWin = null;
       updateContextMenu({enable:false});
+    });
+  } else if (info.menuItemId === closeWATabsContextId) {
+    console.log("[StandaloneWA:BG] close WhatsApp tabs...");
+    
+    let candidateTabs = await getCandidateTabs();
+    let WATabIds = candidateTabs.map((tab) => tab.id);
+    console.log(`removing WATabs (${candidateTabs.length})`, WATabIds, candidateTabs);
+    setUnreadMessages('');
+
+    chrome.tabs.remove(WATabIds, () => {
+      if (chrome.runtime.lastError) {
+        console.warn('Whoops...', chrome.runtime.lastError.message);
+      }
     });
   }
 });
