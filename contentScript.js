@@ -111,6 +111,15 @@
   chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     debug.log("[StandaloneWA:CTX]", msg);
     const { event, data } = msg;
+    
+    if (event === 'requestUnreadMessages') {
+      if (chrome.runtime?.id) {
+        chrome.runtime.sendMessage({
+          event: "setUnreadMessages",
+          data: unreadMessages,
+        });
+      }
+    }
   });
 
   // reset badge and title when browsing away from page

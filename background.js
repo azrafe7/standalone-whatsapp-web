@@ -81,7 +81,22 @@ function updateContextMenu(options={}) {
 function openPopupWindow(options) {
   chrome.windows.create(options, (win) => {
     createdPopupWin = win;
-    console.log('created', createdPopupWin);
+    const tabId = options.tabId ?? win.tabs[0].id;
+    console.log(options.tabId ? 'moved win:' : 'created win:', createdPopupWin, 'tabId:', tabId);
+    
+    const msg = { event:'requestUnreadMessages', data:null };
+    console.log('requestUnreadMessages from tabId:', tabId);
+    chrome.tabs.sendMessage(
+      tabId,
+      msg,
+      null,
+      (response) => {
+        let lastError = chrome.runtime.lastError;
+        if (lastError) {
+          console.warn('Whoops...', lastError.message);
+        }
+      }
+    );
   });
 }
 
@@ -113,7 +128,7 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 
 function setLoading() {
-  setTitle({ append: ' (loading)' });
+  setTitle({ append: ' (loading…)' });
   chrome.action.setBadgeText({
     text: '…'
   });
@@ -138,10 +153,10 @@ chrome.action.onClicked.addListener(async (tab) => {
     let candidateTabs = await getCandidateTabs();
     console.log("candidateTabs", candidateTabs);
     if (candidateTabs.length > 0) {
-      const tabToRemove = candidateTabs[0];
+      const tabToMove = candidateTabs[0];
       delete options.url;
-      options.tabId = tabToRemove.id;
-      console.log("moved tab", tabToRemove.id);
+      options.tabId = tabToMove.id;
+      console.log("moved tabId", tabToMove.id);
       openPopupWindow(options);
     } else {
       openPopupWindow(options);
