@@ -19,6 +19,8 @@ Right-click the extension icon and select "Re-attach as tab..." from the context
  • Single-instance, detached from other tabs
  • Reports unread messages in the extension's icon
  • Draw attention to popup window on new unread messages
+ • Re-attach as tab... (extension context menu)
+ • Close all WhatsApp Web Tabs... (extension context menu)
 
 
 DISCLAIMER: I'm not in any way affiliated with WhatsApp, just a happy user of it.
